@@ -1,9 +1,9 @@
-import { query, Client } from "faunadb";
-import getId from "./utils/getId";
+const faunadb = require("faunadb");
+const getId = require("./utils/getId");
 
 export function handler(event, context) {
-  const q = query;
-  const client = new Client({
+  const q = faunadb.query;
+  const client = new faunadb.Client({
     secret: process.env.FAUNADB_SERVER_SECRET,
   });
 
