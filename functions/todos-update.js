@@ -1,27 +1,29 @@
-const faunadb = require('faunadb')
-const getId = require('./utils/getId')
+import { query, Client } from "faunadb";
+import getId from "./utils/getId";
 
-const q = faunadb.query
-const client = new faunadb.Client({
-  secret: process.env.FAUNADB_SERVER_SECRET
-})
+export function handler(event, context) {
+  const q = query;
+  const client = new Client({
+    secret: process.env.FAUNADB_SERVER_SECRET,
+  });
 
-exports.handler = (event, context) => {
-  const data = JSON.parse(event.body)
-  const id = getId(event.path)
-  console.log(`Function 'todo-update' invoked. update id: ${id}`)
-  return client.query(q.Update(q.Ref(`classes/todos/${id}`), {data}))
+  const data = JSON.parse(event.body);
+  const id = getId(event.path);
+  console.log(`Function 'todo-update' invoked. update id: ${id}`);
+  return client
+    .query(q.Update(q.Ref(`classes/todos/${id}`), { data }))
     .then((response) => {
-      console.log('success', response)
+      console.log("success", response);
       return {
         statusCode: 200,
-        body: JSON.stringify(response)
-      }
-    }).catch((error) => {
-      console.log('error', error)
+        body: JSON.stringify(response),
+      };
+    })
+    .catch((error) => {
+      console.log("error", error);
       return {
         statusCode: 400,
-        body: JSON.stringify(error)
-      }
-    })
+        body: JSON.stringify(error),
+      };
+    });
 }
